@@ -46,19 +46,18 @@ export default class List extends Component {
         })
     }
 
-    edit = (id) => {
+    edit(id) {
         console.log(id)
     }
 
-    delete = (id) => {
+    delete(id) {
         console.log(id)
         axios({
             method: 'delete',
             url: serverUrl + 'events/' + id
         }).then(res => {
-            console.log(res)
-            this.componentDidMount()
             if (res.data.status === true) {
+                this.componentDidMount()
             }
         }).catch(err => {
             console.log({ err })
@@ -69,7 +68,7 @@ export default class List extends Component {
         if (!localStorage.getItem('Id')) return window.location.href = '/'
         return (
             <div className='container'>
-                <Link to="/add" className="btn btn-primary" >Go to Form</Link>
+                <Link to="/add" className="btn btn-primary mb-2 mt-2" >Go to Form</Link>
                 <div>
                     <table className="table table-bordered">
                         <thead>
