@@ -33,6 +33,7 @@ app.use('/public', express.static('public'));
 
 //Routes
 app.use('/users', require('./routes/user'))
+app.use('/events', require('./routes/event'))
 
 //Runing Port
 app.listen(process.env.PORT || 9000, function () {

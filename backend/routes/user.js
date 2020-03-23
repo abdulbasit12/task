@@ -13,50 +13,27 @@ router.post('/login', (req, res) => {
         status: false,
         error: {},
     }
-    User.findOne({ userName: req.body.userName })
+    User.findOne({ userName: req.body.userName }) //finding user by name
         .then(user => {
-            if (user != null) {
+            if (user != null) { //if user found
                 let password = user.password
                 let check = bcrypt.compareSync(req.body.password, password)
-                if (check == true) {
+                if (check == true) { //if password is valid
                     result.message = 'success'
                     result.status = true
                     result.data = { userId: user._id }
                     res.json(result)
-                } else {
+                } else { //if password is NOT valid
                     result.message = 'invalid password'
                     return res.status(422).json(result)
                 }
-            } else {
+            } else { //if user not found
                 result.message = 'invalid credentials'
                 return res.status(422).json(result)
             }
         }).catch(err => {
             res.status(422).json({ err })
         })
-    // User.findOne({ email })
-    //     .then(user => {
-    //         if (!user) {
-    //             return res.status(422).json({ message: 'User Does not Exists' })
-    //         }
-    //         if (user.password == null) {
-    //             return res.json({ message: 'set password', userId: user._id })
-    //         }
-    //         //Validate password
-    //         bcrypt.compare(password, user.password)
-    //             .then(isMatch => {
-    //                 if (!isMatch) return res.status(422).json({ message: 'Password not matched' });
-    //                 jwt.sign(
-    //                     { id: user.id },
-    //                     config.get('jwtSecret'),
-    //                     (err, token) => {
-    //                         if (err) throw err;
-    //                         res.send({ message: 'success', token, data: user._id, email: user.email, category: user.category, name: user.firstname + ' ' + user.lastname })
-    //                     }
-    //                 )
-    //             })
-    //     })
-
 })
 
 module.exports = router;
