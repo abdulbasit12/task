@@ -85,12 +85,19 @@ router.put('/:id', (req, res) => {
 
 //delete event
 router.delete('/:id', (req, res) => {
+    var result = {
+        message: '',
+        data: {},
+        status: false,
+        error: {},
+    }
     Event.deleteOne({ _id: req.params.id })
         .then(() => {
             result.message = 'event deleted'
             result.status = true
             res.json(result)
         }).catch(err => {
+            console.log(err)
             result.message = 'error'
             result.error = err
             res.status(422).json(result)
