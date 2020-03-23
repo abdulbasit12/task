@@ -85,7 +85,7 @@ router.put('/:id', (req, res) => {
 
 //delete event
 router.delete('/:id', (req, res) => {
-    Event.deleteOne({_id: req.params.id})
+    Event.deleteOne({ _id: req.params.id })
         .then(() => {
             result.message = 'event deleted'
             result.status = true

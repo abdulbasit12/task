@@ -35,10 +35,12 @@ export default class Add extends Component {
                 members: this.state.members,
                 detail: this.state.detail,
                 date: this.state.date,
-                time: this.stat.time
+                time: this.state.date + ' ' + this.state.time
             }
         }).then(res => {
-            console.log(res)
+            if (res) {
+                window.location.reload()
+            }
         }).catch(err => {
             console.log({ err })
         })
@@ -48,9 +50,9 @@ export default class Add extends Component {
         const { eventName, location, members, detail, date, time } = this.state
         if (!localStorage.getItem('Id')) return window.location.href = '/'
         return (
-            <div>
-                <Link to="/list" className="btn btn-primary" >Back</Link>
-                <div className='container'>
+            <div className='container'>
+                <Link to="/list" className="btn btn-primary" >Go to List</Link>
+                <div>
                     <form onSubmit={this.sumbit}>
                         <div className="form-group">
                             <label >Event Name</label>
