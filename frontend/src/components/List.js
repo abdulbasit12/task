@@ -10,13 +10,16 @@ export default class List extends Component {
     constructor() {
         super();
         this.state = {
+            id: '',
             eventName: '',
             location: '',
             members: '',
             detail: '',
             date: '',
             time: '',
-            data: []
+            data: [],
+            toggle: false,
+            error: ''
         }
     }
 
@@ -47,10 +50,52 @@ export default class List extends Component {
     }
 
     edit(id) {
-        console.log(id)
+        this.setState({
+            toggle: true
+        })
+        axios({
+            method: 'get',
+            url: serverUrl + 'events/' + id
+        }).then(res => {
+            console.log(moment.utc(res.data.data.event[0].time).format('LT'))
+            this.setState({
+                id: res.data.data.event[0]._id,
+                eventName: res.data.data.event[0].eventName,
+                location: res.data.data.event[0].location,
+                members: res.data.data.event[0].members,
+                detail: res.data.data.event[0].detail,
+                date: moment.utc(res.data.data.event[0].date).format('YYYY-MM-DD'),
+                time: moment.utc(res.data.data.event[0].time).format('hh:mm'),
+            })
+        }).catch(err => {
+            console.log({ err })
+        })
     }
 
-    delete(id) {
+    update = (e) => {
+        e.preventDefault()
+        axios({
+            method: 'put',
+            url: serverUrl + 'events/' + this.state.id,
+            data: {
+                eventName: this.state.eventName,
+                location: this.state.location,
+                members: this.state.members,
+                detail: this.state.detail,
+                date: this.state.date,
+                time: this.state.date + ' ' + this.state.time,
+            }
+        }).then(res => {
+            if (res.data.status === true) {
+                this.setState({ toggle: false })
+                this.componentDidMount()
+            }
+        }).catch(err => {
+            console.log({ err })
+        })
+    }
+
+    delete = (id) => {
         console.log(id)
         axios({
             method: 'delete',
@@ -65,6 +110,7 @@ export default class List extends Component {
     }
 
     render() {
+        const { eventName, location, members, detail, date, time } = this.state
         if (!localStorage.getItem('Id')) return window.location.href = '/'
         return (
             <div className='container'>
@@ -97,6 +143,41 @@ export default class List extends Component {
                         </tbody>
                     </table>
                 </div>
+                {this.state.toggle === true
+                    ?
+                    <div className="mt-5">
+                        <form onSubmit={this.update}>
+                            <div className="form-group">
+                                <label >Event Name</label>
+                                <input type="text" className="form-control" name="eventName" value={eventName} required onChange={this.handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label >Location</label>
+                                <input type="text" className="form-control" name="location" value={location} required onChange={this.handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label>members</label>
+                                <input type="number" className="form-control" name="members" value={members} required onChange={this.handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label >Detail</label>
+                                <input type="text" className="form-control" name="detail" value={detail} required onChange={this.handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label>Date</label>
+                                <input type="date" className="form-control" name="date" value={date} required onChange={this.handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label>Time</label>
+                                <input type="time" className="form-control" name="time" value={time} required onChange={this.handleChange} />
+                            </div>
+                            <button type="submit" className="btn btn-primary">Update</button>
+                        </form>
+                        <p>{this.state.error}</p>
+                    </div>
+                    :
+                    <div />
+                }
             </div>
         )
     }

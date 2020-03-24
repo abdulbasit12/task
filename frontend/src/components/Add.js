@@ -25,7 +25,6 @@ export default class Add extends Component {
 
     sumbit = (e) => {
         e.preventDefault()
-        console.log(this.state)
         axios({
             method: 'post',
             url: serverUrl + 'events/',
@@ -39,7 +38,7 @@ export default class Add extends Component {
             }
         }).then(res => {
             if (res) {
-                window.location.reload()
+                window.location.href = "/list"
             }
         }).catch(err => {
             console.log({ err })
@@ -47,11 +46,10 @@ export default class Add extends Component {
     }
 
     render() {
-        const { eventName, location, members, detail, date, time } = this.state
         if (!localStorage.getItem('Id')) return window.location.href = '/'
         return (
             <div className='container'>
-                <Link to="/list" className="btn btn-primary" >Go to List</Link>
+                <Link to="/list" className="btn btn-primary mt-3 mb-3" >Go to List</Link>
                 <div>
                     <form onSubmit={this.sumbit}>
                         <div className="form-group">
