@@ -71,6 +71,12 @@ router.get('/:id', (req, res) => {
 
 //update event
 router.put('/:id', (req, res) => {
+    var result = {
+        message: '',
+        data: {},
+        status: false,
+        error: {},
+    }
     Event.updateOne({ _id: req.params.id }, { ...req.body })
         .then(() => {
             result.message = 'event updated'
